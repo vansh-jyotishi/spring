@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Health Check Sum</title>
+</head>
+<body>
+    <h2>Sum via API</h2>
+    
+    <input type="number" id="num1" value="20">
+    <input type="number" id="num2" value="29">
+    
+    <!-- Button triggers the GET request to your dev tunnel -->
+    <button onclick="getSum()">Calculate</button>
+
+    <h3>Response:</h3>
+    <pre id="result">Waiting for click...</pre>
+
+    <script>
+        async function getSum() {
+            const a = document.getElementById('num1').value;
+            const b = document.getElementById('num2').value;
+            const display = document.getElementById('result');
+
+            // Constructing the URL with query parameters
+            const baseUrl = 'https://9w9z2910-8080.inc1.devtunnels.ms/health-check';
+            const url = `${baseUrl}?a=${a}&b=${b}`;
+
+            display.textContent = "Loading...";
+
+            try {
+                // Performing the GET request
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Displaying the full JSON response
+                display.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Fetch error:', error);
+                display.textContent = `Error: ${error.message}. Make sure the dev tunnel is active and allows CORS.`;
+            }
+        }
+    </script>
+</body>
+</html>
